@@ -35,7 +35,7 @@ function App() {
         if (die.isHeld) {
           return die;
         }
-        return { ...die, value: 1 };
+        return { ...die, value: Math.ceil(Math.random() * 6) };
       })
     );
   }
