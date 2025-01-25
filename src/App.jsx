@@ -18,11 +18,7 @@ function getContent() {
 }
 
 function App() {
-  const [contentList, setContentList] = useState([]);
-
-  useEffect(() => {
-    setContentList(getContent());
-  }, []);
+  const [contentList, setContentList] = useState(getContent());
 
   function reset() {
     setContentList(getContent());
