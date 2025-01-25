@@ -1,21 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { nanoid } from "nanoid";
-
-function Die(props) {
-  return (
-    <button
-      onClick={props.hold}
-      className={
-        `col-span-1 flex flex-col justify-center items-center text-center rounded-lg h-24 w-24 text-2xl font-bold text-blue-50` +
-        (props.isHeld
-          ? " bg-blue-950 border-4 border-blue-400 border-solid"
-          : " bg-blue-600")
-      }
-    >
-      {props.value}
-    </button>
-  );
-}
+import Die from "./components/Die";
+import { useWindowSize } from "react-use";
+import Confetti from "react-confetti";
 
 function generateNewDice() {
   const list = new Array(10).fill(0).map(() => {
@@ -29,8 +16,19 @@ function generateNewDice() {
 }
 
 function App() {
-  const [dice, setDice] = useState(generateNewDice());
-
+  const [dice, setDice] = useState(() => generateNewDice());
+  const gameIsOver = dice.every(
+    (die) => die.isHeld && die.value === dice[0].value
+  );
+  const { width, height } = useWindowSize();
+  const buttonRef = useRef(null);
+  
+  useEffect(() => {
+    if (gameIsOver && buttonRef.current !== null) {
+      buttonRef.current.focus();
+    }
+  }, [gameIsOver]);
+  
   function roll() {
     setDice((dice) =>
       dice.map((die) => {
@@ -40,6 +38,10 @@ function App() {
         return { ...die, value: Math.ceil(Math.random() * 6) };
       })
     );
+  }
+
+  function restart() {
+    setDice(generateNewDice());
   }
 
   function hold(id) {
@@ -55,6 +57,21 @@ function App() {
 
   return (
     <main>
+      {gameIsOver && (
+        <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={1000}
+          tweenDuration={7000}
+          gravity={0.1}
+        />
+      )}
+      <div aria-live="polite" className="sr-only">
+        {gameIsOver && (
+          <p>Congratulations! You won! Press "New Game" to start again.</p>
+        )}
+      </div>
       <section className="flex flex-col justify-center items-center gap-4 h-screen bg-blue-900">
         <div className="flex-grow-0 space-y-2 text-center p-4 sm:py-8">
           <h1 className="text-4xl font-bold text-blue-50">Tenzies</h1>
@@ -76,12 +93,25 @@ function App() {
           })}
         </div>
         <div>
-          <button
-            onClick={roll}
-            className="bg-blue-500 text-white p-4 px-8 text-xl font-bold rounded-lg m-8"
-          >
-            Roll
-          </button>
+          {gameIsOver ? (
+            <button
+              ref={buttonRef}
+              onClick={restart}
+              className={
+                `bg-blue-500 text-white p-4 px-8 text-xl font-bold rounded-lg m-8` +
+                (gameIsOver ? " bg-blue-50 text-blue-900" : "")
+              }
+            >
+              New Game
+            </button>
+          ) : (
+            <button
+              onClick={roll}
+              className="bg-blue-500 text-white p-4 px-8 text-xl font-bold rounded-lg m-8"
+            >
+              Roll
+            </button>
+          )}
         </div>
       </section>
     </main>
