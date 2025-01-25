@@ -2,13 +2,9 @@ import { useState } from "react";
 import { nanoid } from "nanoid";
 
 function Die(props) {
-  function handleClick() {
-    console.log(props.value);
-  }
-
   return (
     <button
-      onClick={handleClick}
+      onClick={props.hold}
       className={
         `col-span-1 flex flex-col justify-center items-center text-center rounded-lg h-24 w-24 text-2xl font-bold text-blue-50` +
         (props.isHeld
@@ -35,8 +31,26 @@ function generateNewDice() {
 function App() {
   const [dice, setDice] = useState(generateNewDice());
 
-  function reset() {
-    setDice(generateNewDice());
+  function roll() {
+    setDice((dice) =>
+      dice.map((die) => {
+        if (die.isHeld) {
+          return die;
+        }
+        return { ...die, value: Math.ceil(Math.random() * 6) };
+      })
+    );
+  }
+
+  function hold(id) {
+    setDice((dice) => {
+      return dice.map((die) => {
+        if (die.id === id) {
+          return { ...die, isHeld: !die.isHeld };
+        }
+        return die;
+      });
+    });
   }
 
   return (
@@ -51,15 +65,22 @@ function App() {
         </div>
         <div className="grid grid-cols-5 grid-row-span-2 gap-2 sm:gap-4 px-4 sm:px-12">
           {dice.map((die) => {
-            return <Die key={dice.id} value={die.value} isHeld={die.isHeld} />;
+            return (
+              <Die
+                key={die.id}
+                value={die.value}
+                isHeld={die.isHeld}
+                hold={() => hold(die.id)}
+              />
+            );
           })}
         </div>
         <div>
           <button
-            onClick={reset}
-            className="bg-blue-500 text-white p-4 text-xl font-bold rounded-lg m-8"
+            onClick={roll}
+            className="bg-blue-500 text-white p-4 px-8 text-xl font-bold rounded-lg m-8"
           >
-            Restart
+            Roll
           </button>
         </div>
       </section>
