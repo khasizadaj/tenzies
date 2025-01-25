@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { nanoid } from "nanoid";
 
 function Die(props) {
   function handleClick() {
@@ -6,22 +7,31 @@ function Die(props) {
   }
 
   return (
-    <button onClick={handleClick} className="col-span-1 flex flex-col justify-center items-center text-center bg-blue-950 rounded-lg h-24 w-24 text-2xl font-bold text-blue-50">
+    <button
+      onClick={handleClick}
+      className="col-span-1 flex flex-col justify-center items-center text-center bg-blue-950 rounded-lg h-24 w-24 text-2xl font-bold text-blue-50"
+    >
       {props.value}
     </button>
   );
 }
 
-function getContent() {
-  const list = new Array(10).fill(0).map(() => Math.ceil(Math.random() * 6));
+function generateNewDice() {
+  const list = new Array(10).fill(0).map(() => {
+    return {
+      id: nanoid(),
+      value: Math.ceil(Math.random() * 6),
+      isHeld: false,
+    };
+  });
   return list;
 }
 
 function App() {
-  const [contentList, setContentList] = useState(getContent());
+  const [dice, setDice] = useState(generateNewDice());
 
   function reset() {
-    setContentList(getContent());
+    setDice(generateNewDice());
   }
 
   return (
@@ -35,8 +45,8 @@ function App() {
           </h3>
         </div>
         <div className="grid grid-cols-5 grid-row-span-2 gap-2 sm:gap-4 px-4 sm:px-12">
-          {contentList.map((value, index) => {
-            return <Die key={index} value={value} />;
+          {dice.map((die) => {
+            return <Die key={dice.id} value={die.value} isHeld={die.isHeld} />;
           })}
         </div>
         <div>
