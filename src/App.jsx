@@ -13,12 +13,8 @@ function Die(props) {
 }
 
 function getContent() {
-  const cardList = [];
-  for (let i = 0; i < 10; i++) {
-    cardList.push(Math.ceil(Math.random() * 6));
-  }
-  console.log(cardList);
-  return cardList;
+  const list = new Array(10).fill(0).map(() => Math.ceil(Math.random() * 6));
+  return list;
 }
 
 function App() {
