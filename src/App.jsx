@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { nanoid } from "nanoid";
 import Die from "./components/Die";
 import { useWindowSize } from "react-use";
@@ -21,7 +21,14 @@ function App() {
     (die) => die.isHeld && die.value === dice[0].value
   );
   const { width, height } = useWindowSize();
-
+  const buttonRef = useRef(null);
+  
+  useEffect(() => {
+    if (gameIsOver && buttonRef.current !== null) {
+      buttonRef.current.focus();
+    }
+  }, [gameIsOver]);
+  
   function roll() {
     setDice((dice) =>
       dice.map((die) => {
@@ -60,6 +67,11 @@ function App() {
           gravity={0.1}
         />
       )}
+      <div aria-live="polite" className="sr-only">
+        {gameIsOver && (
+          <p>Congratulations! You won! Press "New Game" to start again.</p>
+        )}
+      </div>
       <section className="flex flex-col justify-center items-center gap-4 h-screen bg-blue-900">
         <div className="flex-grow-0 space-y-2 text-center p-4 sm:py-8">
           <h1 className="text-4xl font-bold text-blue-50">Tenzies</h1>
@@ -83,6 +95,7 @@ function App() {
         <div>
           {gameIsOver ? (
             <button
+              ref={buttonRef}
               onClick={restart}
               className={
                 `bg-blue-500 text-white p-4 px-8 text-xl font-bold rounded-lg m-8` +

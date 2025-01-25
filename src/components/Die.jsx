@@ -8,6 +8,8 @@ export default function Die(props) {
           ? " bg-blue-950 border-4 border-blue-400 border-solid"
           : " bg-blue-600")
       }
+      aria-pressed={props.isHeld}
+      aria-label={`Die with value ${props.value}, ${props.isHeld ? "held" : "not held"}`}
     >
       {props.value}
     </button>
