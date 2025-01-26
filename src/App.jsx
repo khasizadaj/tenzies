@@ -72,15 +72,15 @@ function App() {
           <p>Congratulations! You won! Press "New Game" to start again.</p>
         )}
       </div>
-      <section className="flex flex-col justify-center items-center gap-4 h-screen bg-blue-900">
+      <section className="flex flex-col justify-center items-center gap-4 min-h-screen bg-blue-900">
         <div className="flex-grow-0 space-y-2 text-center p-4 sm:py-8">
-          <h1 className="text-4xl font-bold text-blue-50">Tenzies</h1>
-          <h3 className="text-lg font-semibold text-blue-50">
+          <h1 className="text-2xl sm:text-4xl font-bold text-blue-50">Tenzies</h1>
+          <h3 className="text-base sm:text-lg font-semibold text-blue-50">
             Be the first player to get all ten of your dice to show the same
             number.
           </h3>
         </div>
-        <div className="grid grid-cols-5 grid-row-span-2 gap-2 sm:gap-4 px-4 sm:px-12">
+        <div className="grid grid-cols-2 grid-row-span-5 sm:grid-cols-5 sm:grid-row-span-2 gap-4 px-4 sm:px-12">
           {dice.map((die) => {
             return (
               <Die
