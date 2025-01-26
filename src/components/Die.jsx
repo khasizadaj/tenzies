@@ -3,7 +3,7 @@ export default function Die(props) {
     <button
       onClick={props.hold}
       className={
-        `col-span-1 flex flex-col justify-center items-center text-center rounded-lg h-24 w-24 text-2xl font-bold text-blue-50` +
+        `col-span-1 flex flex-col justify-center items-center text-center rounded-lg h-24 w-24 sm:h-16 sm:w-16 text-xl sm:text-2xl font-bold text-blue-50` +
         (props.isHeld
           ? " bg-blue-950 border-4 border-blue-400 border-solid"
           : " bg-blue-600")
